@@ -1,17 +1,42 @@
-
 import psycopg2
-import time
+from config import config
 
-hostname = '172.18.0.2:5432'
-username = 'postgres'
-password = 'tvzygcdiu'
-database = 'postgres'
+def create_tables():
+    commands = (
+        """
+        CREATE TABLE IF NOT EXISTS names (
+            profile_id SERIAL PRIMARY KEY,
+            name VARCHAR(255),
+            url VARCHAR(255)
+        )
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS profiles (
+            profile_id INTEGER NOT NULL,
+            CONSTRAINT FK_profile_id FOREIGN KEY (profile_id) REFERENCES names (profile_id),
+            full_name VARCHAR(255),
+            post VARCHAR(255),
+            post2 VARCHAR(255),
+            email VARCHAR(255),
+            location VARCHAR(255),
+            phoneT VARCHAR(255)
+        )
+        """,
+    )
+    connection = None
+    try:
+        params = config()
+        connection = psycopg2.connect(**params)
+        cursor = connection.cursor()
+        for command in commands:
+            cursor.execute(command)
+        cursor.close()
+        connection.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if connection is not None:
+            connection.close()
 
-try:
-    conn = psycopg2.connect(host='172.18.0.2', user='postgres', port='5432',
-                        password='tvzygcdiu', dbname='postgres')
-    print("Database connected...")
-    time.sleep(2)
-    conn.close()
-except Exception as DatabaseConnectionRefused:
-    print("database Connection Refused")
+if __name__ == '__main__':
+    create_tables()
