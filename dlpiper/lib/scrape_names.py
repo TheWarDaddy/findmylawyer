@@ -4,7 +4,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-from custom_logger import set_logger
+import psycopg2
+
+
+hostname = '172.18.0.2'
+username = 'postgres'
+password = 'tvzygcdiu'
+database = 'postgres'
 
 PATH = "/usr/local/bin/chromedriver"
 driver = webdriver.Chrome(PATH)
@@ -33,13 +39,25 @@ def scrape_names(url):
                     EC.presence_of_element_located((By.CLASS_NAME, "coveo-result-list-container"))
                     )
             peoples = main.find_elements_by_class_name("coveo-list-layout")
+            try:
+                conn = psycopg2.connect(host=hostname, user=username, port='5432',
+                                    password=password, dbname=database)
+                print("Database connected...")
+                time.sleep(2)
+            except Exception as DatabaseConnectionRefused:
+                print("database Connection Refused")
             for people in peoples:
                 profiles_dictionnary = dict.fromkeys(["full_name", "profile_url"], None)
                 url = people.find_element_by_tag_name("a").get_attribute('href')
                 name = people.find_element_by_class_name("CoveoResultLink")
                 profiles_dictionnary["full_name"] = name.text
                 profiles_dictionnary["profile_url"] = url
+                cur = conn.cursor()
+                cur.execute("INSERT INTO names (names, urls) VALUES(%s, %s)", (name.text, url))
+                conn.commit()
                 full_profiles.append(profiles_dictionnary)
+            cur.close()
+            conn.close()
             i += 1
             time.sleep(scroll_pause_time)
             scroll_height = driver.execute_script("return document.body.scrollHeight;")
@@ -47,10 +65,10 @@ def scrape_names(url):
                 break
         j += 1
         if j == len(pages):
-            LOGGER.info(str(len(full_profiles)) + " profile is scrapped ...")
+#            LOGGER.info(str(len(full_profiles)) + " profile is scrapped ...")
             break
         else:
-            LOGGER.info("Move to the next page...")
+#            LOGGER.info("Move to the next page...")
             next_page = driver.find_element_by_class_name("coveo-pager-next")
             next_page.click()
         time.sleep(2)

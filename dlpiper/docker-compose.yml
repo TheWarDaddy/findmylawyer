@@ -1,0 +1,12 @@
+version: '3'
+services:
+  database:
+    container_name: dlpiper-database
+    restart: always
+    image: "postgres:11"
+    env_file:
+      - database.env
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+volumes:
+  database-data:
