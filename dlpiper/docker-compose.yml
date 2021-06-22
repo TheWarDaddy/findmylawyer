@@ -7,6 +7,6 @@ services:
     env_file:
       - database.env
     volumes:
-      - database-data:/var/lib/postgresql/data/
+      - dlpiper-data:/var/lib/postgresql/data/
 volumes:
-  database-data:
+  dlpiper-data:

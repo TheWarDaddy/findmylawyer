@@ -5,12 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import psycopg2
-
-
-hostname = '172.18.0.2'
-username = 'postgres'
-password = 'tvzygcdiu'
-database = 'postgres'
+from config import config
 
 PATH = "/usr/local/bin/chromedriver"
 driver = webdriver.Chrome(PATH)
@@ -40,8 +35,8 @@ def scrape_names(url):
                     )
             peoples = main.find_elements_by_class_name("coveo-list-layout")
             try:
-                conn = psycopg2.connect(host=hostname, user=username, port='5432',
-                                    password=password, dbname=database)
+                params = config()
+                connection = psycopg2.connect(**params)
                 print("Database connected...")
                 time.sleep(2)
             except Exception as DatabaseConnectionRefused:
@@ -52,12 +47,12 @@ def scrape_names(url):
                 name = people.find_element_by_class_name("CoveoResultLink")
                 profiles_dictionnary["full_name"] = name.text
                 profiles_dictionnary["profile_url"] = url
-                cur = conn.cursor()
-                cur.execute("INSERT INTO names (names, urls) VALUES(%s, %s)", (name.text, url))
-                conn.commit()
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO names (names, urls) VALUES(%s, %s)", (name.text, url))
+                connection.commit()
                 full_profiles.append(profiles_dictionnary)
-            cur.close()
-            conn.close()
+            cursor.close()
+            connection.close()
             i += 1
             time.sleep(scroll_pause_time)
             scroll_height = driver.execute_script("return document.body.scrollHeight;")
@@ -74,3 +69,6 @@ def scrape_names(url):
         time.sleep(2)
         screen_height = driver.execute_script("return window.screen.height;")
     return full_profiles
+
+if __name__ == "__main__":
+    scrape_names()

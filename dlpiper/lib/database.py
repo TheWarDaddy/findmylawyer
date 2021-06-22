@@ -19,7 +19,9 @@ def create_tables():
             post2 VARCHAR(255),
             email VARCHAR(255),
             location VARCHAR(255),
-            phoneT VARCHAR(255)
+            phoneT VARCHAR(255),
+            related_services VARCHAR(255),
+            related_sectors VARCHAR(255)
         )
         """,
     )

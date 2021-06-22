@@ -1,7 +1,9 @@
 FROM python:3.8
 
-
 WORKDIR /app
+
+COPY ../../lib .
+COPY ../../requirements.txt
 
 RUN mkdir __logger
 
@@ -20,7 +22,9 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 ENV DISPLAY=:99
 
 RUN pip install --upgrade pip
-
 RUN pip install -r requirements.txt
+
+RUN chmod +x database.py
+RUN python3 ./database.py
 
 CMD ["python", "./app.py"]
