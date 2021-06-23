@@ -3,8 +3,8 @@ from main_profile import *
 import psycopg2
 
 
+
 def app():
-    process_finished = False
     try:
         params = config()
         connection = psycopg2.connect(**params)

@@ -6,12 +6,14 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import psycopg2
 from config import config
+from main_profile import set_chrome_options
+
 
 PATH = "/usr/local/bin/chromedriver"
-driver = webdriver.Chrome(PATH)
+driver = webdriver.Chrome(PATH, , chrome_options=set_chrome_options())
 
 def scrape_names(url):
-    driver.get(url)
+    driver.get(profile_url, chrome_options=set_chrome_options())
     driver.set_window_size(1920, 1080)
     time.sleep(2)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -71,4 +73,4 @@ def scrape_names(url):
     return full_profiles
 
 if __name__ == "__main__":
-    scrape_names()
+    scrape_names("https://www.dlapiper.com/en/uk/people/#first=900&sort=relevancy")

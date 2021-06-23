@@ -2,8 +2,10 @@ FROM python:3.8
 
 WORKDIR /app
 
-COPY ../../lib .
-COPY ../../requirements.txt
+COPY lib .
+COPY requirements.txt .
+COPY containers/dlpiper-profiles-engine/wait-for-it.sh .
+RUN chmod +x wait-for-it.sh
 
 RUN mkdir __logger
 
@@ -20,11 +22,9 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 
 # set display port to avoid crash
 ENV DISPLAY=:99
-
+RUN apt-get update && apt-get install -y postgresql-contrib
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-RUN chmod +x database.py
-RUN python3 ./database.py
 
-CMD ["python", "./app.py"]
+CMD ["./wait-for-it.sh", "postgres-database", "--", "python", "app.py"]

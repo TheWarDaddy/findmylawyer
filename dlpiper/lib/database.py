@@ -5,14 +5,14 @@ def create_tables():
     commands = (
         """
         CREATE TABLE IF NOT EXISTS names (
-            profile_id SERIAL PRIMARY KEY,
+            profile_id SERIAL PRIMARY KEY NOT NULL UNIQUE,
             name VARCHAR(255),
             url VARCHAR(255)
         )
         """,
         """
         CREATE TABLE IF NOT EXISTS profiles (
-            profile_id INTEGER NOT NULL,
+            profile_id INTEGER NOT NULL UNIQUE,
             CONSTRAINT FK_profile_id FOREIGN KEY (profile_id) REFERENCES names (profile_id),
             full_name VARCHAR(255),
             post VARCHAR(255),
