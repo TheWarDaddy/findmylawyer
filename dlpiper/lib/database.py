@@ -12,16 +12,15 @@ def create_tables():
         """,
         """
         CREATE TABLE IF NOT EXISTS profiles (
-            profile_id INTEGER NOT NULL UNIQUE,
-            CONSTRAINT FK_profile_id FOREIGN KEY (profile_id) REFERENCES names (profile_id),
-            full_name VARCHAR(255),
-            post VARCHAR(255),
-            post2 VARCHAR(255),
-            email VARCHAR(255),
-            location VARCHAR(255),
-            phoneT VARCHAR(255),
-            related_services VARCHAR(255),
-            related_sectors VARCHAR(255)
+            profile_id SERIAL PRIMARY KEY NOT NULL UNIQUE,
+            full_name VARCHAR(8000),
+            post VARCHAR(8000),
+            post2 VARCHAR(8000),
+            email VARCHAR(8000),
+            location VARCHAR(8000),
+            phoneT VARCHAR(8000),
+            related_services VARCHAR(8000),
+            related_sectors VARCHAR(8000)
         )
         """,
     )

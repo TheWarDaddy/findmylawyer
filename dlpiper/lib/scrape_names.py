@@ -10,10 +10,10 @@ from main_profile import set_chrome_options
 
 
 PATH = "/usr/local/bin/chromedriver"
-driver = webdriver.Chrome(PATH, , chrome_options=set_chrome_options())
+driver = webdriver.Chrome(PATH, chrome_options=set_chrome_options())
 
-def scrape_names(url):
-    driver.get(profile_url, chrome_options=set_chrome_options())
+def scrape_names(profile_url):
+    driver.get(profile_url)
     driver.set_window_size(1920, 1080)
     time.sleep(2)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -50,7 +50,7 @@ def scrape_names(url):
                 profiles_dictionnary["full_name"] = name.text
                 profiles_dictionnary["profile_url"] = url
                 cursor = connection.cursor()
-                cursor.execute("INSERT INTO names (names, urls) VALUES(%s, %s)", (name.text, url))
+                cursor.execute("INSERT INTO names (name, url) VALUES(%s, %s)", (name.text, url))
                 connection.commit()
                 full_profiles.append(profiles_dictionnary)
             cursor.close()

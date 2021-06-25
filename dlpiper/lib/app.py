@@ -18,7 +18,7 @@ def app():
         print("Print each row and it's columns values")
         for row in profile_records:
             profile = scrape_infos(row[2])
-            cursor.execute("INSERT INTO profiles (profile_id, full_name, post, post2, email, location, phoneT, related_services, related_sectors) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)", (row[0], profile["full_name"], profile["post"], profile["post2"], profile["email"], profile["location"], profile["phoneT"], profile["related_services"], profile["related_sectors"]))
+            cursor.execute("INSERT INTO profiles (full_name, post, post2, email, location, phoneT, related_services, related_sectors) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)", (profile["full_name"], profile["post"], profile["post2"], profile["email"], profile["location"], profile["phoneT"], profile["related_services"], profile["related_sectors"]))
             connection.commit()
 
     except (Exception, psycopg2.Error) as error:
@@ -27,6 +27,7 @@ def app():
     finally:
         # closing database connection.
         if connection:
+
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")

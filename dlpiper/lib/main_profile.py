@@ -58,8 +58,8 @@ def scrape_infos(profile_url):
                     profile["related_sectors"].append(sector.text)
                 break
         return profile
-    finally:
-        driver.close()
+    except Exception as Error:
+        pass
 
 def get_related_services(profile_url):
     try:
@@ -78,7 +78,7 @@ def get_related_services(profile_url):
                 break
         return related_services
     finally:
-        driver.close()
+        driver.quit()
 
 def get_related_sectors(profile_url):
     try:
@@ -97,7 +97,7 @@ def get_related_sectors(profile_url):
                 break
         return related_sectors
     finally:
-        driver.close()
+        driver.quit()
 
 def get_main_text(profile_url):
     try:
