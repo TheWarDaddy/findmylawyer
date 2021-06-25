@@ -1,0 +1,61 @@
+version: '3'
+services:
+  database:
+    container_name: postgres-database
+    restart: always
+    image: "postgres:11"
+    env_file:
+      - database.env
+    volumes:
+      - dlpiper-data:/var/lib/postgresql/data/
+    networks:
+      - fml
+
+  dlpiper-init:
+    build:
+      context: .
+      dockerfile: containers/dlpiper-init/Dockerfile
+    container_name: dlpiper-init
+    image: ${IMAGE_REPO}:fml-init${VERSION}
+    env_file:
+      - database.env
+    depends_on:
+      - database
+    links:
+      - database
+    networks:
+      - fml
+
+  dlpiper-names-engine:
+    build:
+      context: .
+      dockerfile: containers/dlpiper-names-engine/Dockerfile
+    container_name: dlpiper-names-scrapper
+    image: ${IMAGE_REPO}:fml-names${VERSION}
+    env_file:
+      - database.env
+    restart: on-failure
+    depends_on:
+      - database
+    networks:
+      - fml
+
+  dlpiper-profiles-engine:
+    build:
+      context: .
+      dockerfile: containers/dlpiper-profiles-engine/Dockerfile
+    container_name: dlpiper-profiles-scrapper
+    image: ${IMAGE_REPO}:fml-profiles${VERSION}
+    env_file:
+      - database.env
+    restart: on-failure
+    depends_on:
+      - database
+    networks:
+      - fml
+
+networks:
+  fml:
+
+volumes:
+  dlpiper-data:

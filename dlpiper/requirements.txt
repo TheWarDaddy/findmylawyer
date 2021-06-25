@@ -1,0 +1,5 @@
+selenium
+wheel
+psycopg2-binary
+setuptools
+psycopg2
