@@ -27,4 +27,4 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 
-CMD ["./wait-for-it.sh", "postgres-database", "--", "python", "scrape_names.py"]
+CMD ["./wait-for-it.sh", "postgres-database", "--", "python", "names_url.py"]
