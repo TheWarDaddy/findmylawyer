@@ -42,7 +42,11 @@ def scrape_infos(profile_url):
         for i in range(0, len(local_address)):
             current = locations.find_elements_by_tag_name("p")[i].text
             profile["location"].append(current)
-        profile["phoneT"] = locations.find_element_by_tag_name("span").text
+        try:
+            profile["phoneT"] = locations.find_element_by_tag_name("span").text
+        except Exception as Error:
+            print(error)
+
         body = driver.find_elements_by_class_name("js-ui-related-info")
         content_block = driver.find_elements_by_class_name("related-options")
         for i in range(0,len(content_block)):
@@ -63,7 +67,7 @@ def scrape_infos(profile_url):
 
 def get_related_services(profile_url):
     try:
-        driver.get(profile_url, chrome_options=set_chrome_options())
+        driver.get(profile_url)
         driver.set_window_size(1920, 1080)
         time.sleep(2)
         related_services = []
@@ -82,7 +86,7 @@ def get_related_services(profile_url):
 
 def get_related_sectors(profile_url):
     try:
-        driver.get(profile_url, chrome_options=set_chrome_options())
+        driver.get(profile_url)
         driver.set_window_size(1920, 1080)
         time.sleep(2)
         related_sectors = []
@@ -101,7 +105,7 @@ def get_related_sectors(profile_url):
 
 def get_main_text(profile_url):
     try:
-        driver.get(profile_url, chrome_options=set_chrome_options())
+        driver.get(profile_url)
         driver.set_window_size(1920, 1080)
         overview = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, "col--main"))
@@ -113,20 +117,19 @@ def get_main_text(profile_url):
 
 def get_quote(profile_url):
     try:
-        driver.get(profile_url, chrome_options=set_chrome_options())
+        driver.get(profile_url)
         driver.set_window_size(1920, 1080)
         quote = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "blockquote"))
                 )
-        text_quote = quote.text
-        return str(text_quote)
+        return quote.text
     finally:
         driver.close()
 
 
 def get_main_experience(profile_url):
     try:
-        driver.get(profile_url, chrome_options=set_chrome_options())
+        driver.get(profile_url)
         driver.set_window_size(1920, 1080)
         experience_button = driver.find_element_by_class_name("experience")
         experience_button.click()
@@ -144,7 +147,7 @@ def get_main_experience(profile_url):
 
 def get_main_credentials(profile_url):
     try:
-        driver.get(profile_url, chrome_options=set_chrome_options())
+        driver.get(profile_url)
         driver.set_window_size(1920, 1080)
         credentials_button = driver.find_element_by_class_name("credentials")
         credentials_button.click()

@@ -13,5 +13,5 @@ until PGPASSWORD="tvzygcdiu" psql -h "$host" -U "postgres" -c 'SELECT name, COUN
   sleep 1
 done
 
->&2 echo "Postgres is up - executing command" && PGPASSWORD="tvzygcdiu" psql -h "$host" -U "postgres" -f names_cleaner.sql
+>&2 echo "Postgres is up - executing command" && PGPASSWORD="tvzygcdiu" psql -h "$host" -U "postgres" -f names_cleaner.sql && python3 ./cleaner.py
 exec $cmd
