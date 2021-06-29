@@ -40,6 +40,22 @@ services:
     networks:
       - fml
 
+  dlpiper-cleaner:
+    build:
+      context: .
+      dockerfile: containers/dlpiper-cleaner/Dockerfile
+    container_name: dlpiper-cleaner
+    image: ${IMAGE_REPO}:fml-cleaner${VERSION}
+    env_file:
+      - database.env
+    depends_on:
+      - database
+      - dlpiper-names-engine
+    links:
+      - database
+    networks:
+      - fml
+
   dlpiper-profiles-engine:
     build:
       context: .
